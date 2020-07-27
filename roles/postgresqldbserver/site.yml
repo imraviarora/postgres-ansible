@@ -1,0 +1,9 @@
+---
+# This playbook deploys a single PostgreSQL instance from the source code
+#  
+  - hosts: postgresql-servers
+    become: true
+    become_user: root
+      
+    roles:
+      - postgresqldbserver

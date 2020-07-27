@@ -1,0 +1,46 @@
+---
+- name: Install PostgreSQL dependencies
+  yum: name={{item}} state=present
+  with_items:
+   - gcc
+   - openldap-devel
+   - python-devel
+   - readline-devel
+   - openssl-devel
+   - redhat-lsb
+   - bison
+   - flex
+   - perl-ExtUtils-Embed
+   - zlib-devel
+   - crypto-utils
+   - openssl-devel
+   - pam-devel
+   - libxml2-devel
+   - libxslt-devel
+   - tcl
+   - tcl-devel
+   - openssh-clients
+   - bzip2
+   - net-tools
+   - wget
+   - screen
+   - ksh
+ 
+- name: Add PostgreSQL operating system group
+  group: name=postgres state=present
+ 
+- name: Add PostgreSQL operating system user
+  user: name=postgres comment="PostgreSQL binaries owner" group=postgres
+
+- name: Download the PostgreSQL 9.5.3 sources
+  get_url: url=https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2 dest=/var/tmp mode=0755
+
+- name: Copy PostgreSQL install script to targets
+  copy: src=install_pg953.sh dest=/var/tmp/install_pg953.sh owner=postgres group=postgres mode="u=rwx"
+
+- name: Compile and install PostgreSQL
+  shell: /var/tmp/install_pg953.sh >> /var/tmp/install_pg_log
+  args:
+    executable: /usr/bin/bash
+
+
